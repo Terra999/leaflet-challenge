@@ -71,16 +71,6 @@ function createMap(earthquakes) {
   var features = [];
   // Loop through the earthquake array and create one marker for each earthquake object
   for (var i = 0; i < features.length; i++) {
-    // Add circles to map
-    features.push(
-      L.circle(features[i].coordinates[2], {
-        fillOpacity: 0.75,
-        color: "white",
-        fillColor: color,
-        // Adjust radius
-        radius: features[i].coordinates[2] * 1500
-      })
-    ).addTo(myMap);
 
     // Conditionals for earthquake depth
     var color = "";
@@ -101,8 +91,17 @@ function createMap(earthquakes) {
     }
     else {
       color = "green";
+
+      // Add circles to map
+      features.push(
+        L.circle(features[i].coordinates[2], {
+          fillOpacity: 0.75,
+          color: "white",
+          fillColor: color,
+          // Adjust radius
+          radius: features[i].coordinates[2] * 1500
+        })
+      ).addTo(myMap);
     }
-
-
   }
 }
