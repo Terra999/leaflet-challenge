@@ -42,12 +42,12 @@ d3.json(baseURL).then(function (data) {
 var legend = L.control({ position: 'bottomright' });
 legend.onAdd = function () {
 
-  var div = L.DomUtil.create('div', 'legend'),
+  var div = L.DomUtil.create('div', 'info legend'),
     grades = [-10, 10, 30, 50, 70, 90],
-    labels = ["-10-10", "10-30", "30-50", "50-70", "70-90", "90+"]
+    labels = []
   var colors = ["#89a832", "#32a834", "#32a87d", "#3244a8", "#8532a8", "#a83240"];
 
-  // loop through our density intervals and generate a label with a colored square for each interval
+  // loop through our depth intervals and generate a label with a colored square for each interval
   for (var i = 0; i < grades.length; i++) {
     div.innerHTML +=
       '<i style="background:' + colors[i] + '"></i> ' +
