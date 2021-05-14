@@ -32,45 +32,51 @@ d3.json(baseURL).then(function (data) {
     style: style,
     onEachFeature: function(feature, layer) {
       layer.bindPopup("<h3>Magnitude: " + feature.properties.mag +
-      "</h3><hr><h3>Depth: " + feature.geometry.coordinates[2] + "</h3>")
+      "</h3><h3>Depth: " + feature.geometry.coordinates[2] + "</h3><hr><h3>Place: " +
+      feature.properties.place + "</h3>")
     }
   }).addTo(myMap); 
-  // var legend = L.control({position: 'bottomright'});
-  // legend.onAdd = function () {
 
-  //       var div = L.DomUtil.create('div', 'info legend'),
-  //       var grades = [-10, 10, 30, 50, 70, 90];
-  //       var labels = ["-10-10", "10-30", "30-50", ];
-  //       var colors = ["green", ""]
-    
-  //       // loop through our density intervals and generate a label with a colored square for each interval
-  //       for (var i = 0; i < grades.length; i++) {
-  //           div.innerHTML +=
-  //               '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-  //               grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-  //   }
-  // legend.addTo(myMap);
 });
 
+var legend = L.control({ position: 'bottomright' });
+legend.onAdd = function () {
+
+  var div = L.DomUtil.create('div', 'legend'),
+    grades = [-10, 10, 30, 50, 70, 90],
+    labels = ["-10-10", "10-30", "30-50", "50-70", "70-90", "90+"]
+  var colors = ["#89a832", "#32a834", "#32a87d", "#3244a8", "#8532a8", "#a83240"];
+
+  // loop through our density intervals and generate a label with a colored square for each interval
+  for (var i = 0; i < grades.length; i++) {
+    div.innerHTML +=
+      '<i style="background:' + colors[i] + '"></i> ' +
+      grades[i] + (grades[i] ? '&ndash;' + grades[i] + '<br>' : '+');
+  }
+  return div;
+};
+
+legend.addTo(myMap);
+
 function getColor(depth) {
-  var color = "";
+  // var color = "";
   if (depth > 90) {
-    color = "red";
+    color = "#a83240";
   }
   else if (depth > 70) {
-    color = "pink";
+    color = "#8532a8";
   }
   else if (depth > 50) {
-    color = "orange";
+    color = "#3244a8";
   }
   else if (depth > 30) {
-    color = "light orange";
+    color = "#32a87d";
   }
   else if (depth > 10) {
-    color = "yellow";
+    color = "#32a834";
   }
   else {
-    color = "green";
+    color = "#89a832";
   }
   return color
 }
