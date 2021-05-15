@@ -36,7 +36,7 @@ function style(feature) {
       opacity: 1,
       color: 'white',
       radius: getSize(feature.properties.mag),
-      fillOpacity: 0.7
+      fillOpacity: 0.8
   };
 };
 
