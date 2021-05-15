@@ -1,65 +1,7 @@
 console.log("terra.js loaded successfully!");
 
-var lightmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-  attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
-  tileSize: 512,
-  maxZoom: 18,
-  zoomOffset: -1,
-  id: "mapbox/light-v10",
-  accessToken: API_KEY
-});
-
-var myMap = L.map("map", {
-  center: [
-    37.09, -95.71
-  ],
-  zoom: 5
-});
-
-lightmap.addTo(myMap);
-
-// Store API endpoint inside baseURL
-var baseURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
-
-// Grab the data with d3
-d3.json(baseURL).then(function (data) {
-  console.log(data);
-
-  L.geoJSON(data, {
-    pointToLayer: function (feature, latlng) {
-      return L.circleMarker(latlng);
-    },
-    style: style,
-    onEachFeature: function(feature, layer) {
-      layer.bindPopup("<h3>Magnitude: " + feature.properties.mag +
-      "</h3><h3>Depth: " + feature.geometry.coordinates[2] + "</h3><hr><h3>Place: " +
-      feature.properties.place + "</h3>")
-    }
-  }).addTo(myMap); 
-
-});
-
-var legend = L.control({ position: 'bottomright' });
-legend.onAdd = function () {
-
-  var div = L.DomUtil.create('div', 'info legend'),
-    grades = [-10, 10, 30, 50, 70, 90],
-    labels = [];
-    // colors = ["#88E445", "#EBE554", "#EBA954", "#EB8F1A", "#EB631A", "#EB411A"];
-
-  // loop through our depth intervals and generate a label with a colored square for each interval
-  for (var i = 0; i < grades.length; i++) {
-    div.innerHTML +=
-      '<i style="background:' + getColor(grades[i] +1) + '"></i> ' +
-      grades[i] + (grades[i +1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-  }
-  return div;
-};
-
-legend.addTo(myMap);
-
+// Function to set color based on earthquake depth
 function getColor(depth) {
-  // var color = "";
   if (depth > 90) {
     color = "#EB411A";
   }
@@ -81,10 +23,12 @@ function getColor(depth) {
   return color
 }
 
+// Function to increase size of circles
 function getSize(magnitude) {
   return magnitude * 5
 }
 
+// Function to set style of circles
 function style(feature) {
   return {
       fillColor: getColor(feature.geometry.coordinates[2]),
@@ -95,3 +39,72 @@ function style(feature) {
       fillOpacity: 0.7
   };
 };
+
+// Create the tile layer that will be the background of my map
+var lightmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+  attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+  tileSize: 512,
+  maxZoom: 18,
+  zoomOffset: -1,
+  id: "mapbox/light-v10",
+  accessToken: API_KEY
+});
+
+// Create my map with the one layer
+var myMap = L.map("map", {
+  center: [
+    37.09, -95.71
+  ],
+  zoom: 5
+});
+
+// Add my 'lightmap' tile layer to my map
+lightmap.addTo(myMap);
+
+// Store API endpoint inside baseURL
+var baseURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
+
+// Grab the data with d3
+d3.json(baseURL).then(function (data) {
+  console.log(data);
+
+  // Create a GeoJSON layer containing the features array on the earthquakeData object
+  L.geoJSON(data, {
+    pointToLayer: function (feature, latlng) {
+      // Add circlse to map
+      return L.circleMarker(latlng);
+    },
+    // Call style from function
+    style: style,
+    // Bind a popup to the circles to show magnitude, depth, and place
+    onEachFeature: function(feature, layer) {
+      layer.bindPopup("<h3>Magnitude: " + feature.properties.mag +
+      "</h3><h3>Depth: " + feature.geometry.coordinates[2] + "</h3><hr><h3>Place: " +
+      feature.properties.place + "</h3>")
+    }
+  }).addTo(myMap); 
+
+});
+
+// Create a legend to display depth scale/color
+var legend = L.control({ position: 'bottomright' });
+// When the layer control is added, insert a div with the class of "info legend"
+legend.onAdd = function () {
+
+  var div = L.DomUtil.create('div', 'info legend'),
+    grades = [-10, 10, 30, 50, 70, 90],
+    labels = [];
+
+  // loop through our depth intervals and generate a label with a colored square for each interval
+  for (var i = 0; i < grades.length; i++) {
+    div.innerHTML +=
+      '<i style="background:' + getColor(grades[i] +1) + '"></i> ' +
+      grades[i] + (grades[i +1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+  }
+  return div;
+};
+
+// Add legend to my map
+legend.addTo(myMap);
+
+
