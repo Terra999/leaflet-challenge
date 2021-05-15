@@ -44,14 +44,14 @@ legend.onAdd = function () {
 
   var div = L.DomUtil.create('div', 'info legend'),
     grades = [-10, 10, 30, 50, 70, 90],
-    labels = []
-  var colors = ["#89a832", "#32a834", "#32a87d", "#3244a8", "#8532a8", "#a83240"];
+    labels = [];
+    // colors = ["#88E445", "#EBE554", "#EBA954", "#EB8F1A", "#EB631A", "#EB411A"];
 
   // loop through our depth intervals and generate a label with a colored square for each interval
   for (var i = 0; i < grades.length; i++) {
     div.innerHTML +=
-      '<i style="background:' + colors[i] + '"></i> ' +
-      grades[i] + (grades[i] ? '&ndash;' + grades[i] + '<br>' : '+');
+      '<i style="background:' + getColor(grades[i] +1) + '"></i> ' +
+      grades[i] + (grades[i +1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
   }
   return div;
 };
@@ -61,22 +61,22 @@ legend.addTo(myMap);
 function getColor(depth) {
   // var color = "";
   if (depth > 90) {
-    color = "#a83240";
+    color = "#EB411A";
   }
   else if (depth > 70) {
-    color = "#8532a8";
+    color = "#EB631A";
   }
   else if (depth > 50) {
-    color = "#3244a8";
+    color = "#EB8F1A";
   }
   else if (depth > 30) {
-    color = "#32a87d";
+    color = "#EBA954";
   }
   else if (depth > 10) {
-    color = "#32a834";
+    color = "#EBE554";
   }
   else {
-    color = "#89a832";
+    color = "#88E445";
   }
   return color
 }
