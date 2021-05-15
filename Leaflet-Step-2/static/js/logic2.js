@@ -69,6 +69,7 @@ var outdoors = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/
 });
 
 // Create two separate layer groups: one for Tectonic Plates and one for Earthquakes
+// var tectonic = L.layerGroup(t)
 
 // Only one base layer can be shown at a time
 var baseMaps = {
@@ -77,10 +78,10 @@ var baseMaps = {
   Outdoors: outdoors
 };
 
-var overlayMaps = {
-  tec
+// var overlayMaps = {
+//   tec
 
-}
+// }
 
 // Create my map with the one layer
 var myMap = L.map("map", {
@@ -93,8 +94,11 @@ var myMap = L.map("map", {
   ]
 });
 
-// Add my 'lightmap' tile layer to my map
-lightmap.addTo(myMap);
+// Pass our map layers into our layer control
+// Add the layer control to the map
+L.control.layers(baseMaps, null, {
+  collapsed: false
+}).addTo(myMap);
 
 // Store API endpoint inside baseURL
 var baseURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
