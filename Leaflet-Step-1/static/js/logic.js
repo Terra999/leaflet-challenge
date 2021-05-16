@@ -71,7 +71,7 @@ d3.json(baseURL).then(function (data) {
   // Create a GeoJSON layer containing the features array on the earthquakeData object
   L.geoJSON(data, {
     pointToLayer: function (feature, latlng) {
-      // Add circlse to map
+      // Add circles to map
       return L.circleMarker(latlng);
     },
     // Call style from function

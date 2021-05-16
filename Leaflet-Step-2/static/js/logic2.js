@@ -40,7 +40,7 @@ function style(feature) {
   };
 };
 
-  // Create the threee tile layers that will be the background of my map
+  // Create the three tile layers that will be the background of my map
   var satellite = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
     attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
     tileSize: 512,
@@ -70,7 +70,7 @@ function style(feature) {
 
   // Create two separate layer groups: one for Tectonic Plates and one for Earthquakes
   var tectonic = L.layerGroup(tectonic);
-  var earthquakes = L.layerGroup(earthquakes);
+  var earthquake = L.layerGroup(earthquake);
 
   // Create base and overlay layers
   var baseMaps = {
@@ -80,23 +80,20 @@ function style(feature) {
   };
   var overlayMaps = {
     "Tectonic Plates": tectonic,
-    Earthquakes: earthquakes
+    Earthquakes: earthquake
   };
 
-  // Create my map with the one layer
+  // Create my map w/ one baseMap and both overlayMaps
   var myMap = L.map("map", {
     center: [
       37.09, -95.71
     ],
     zoom: 3,
-    layers: [satellite, tectonic, earthquakes]
+    layers: [satellite, tectonic, earthquake]
   });
 
-  //   Pass our map layers into our layer control
   // Add the layer control to the map
-  L.control.layers(baseMaps, overlayMaps, {
-    collapsed: false
-  }).addTo(myMap);
+  L.control.layers(baseMaps, overlayMaps).addTo(myMap);
 
   // Create a legend to display depth scale/color
   var legend = L.control({ position: 'bottomright' });
@@ -121,7 +118,7 @@ function style(feature) {
 
   // Store API endpoint inside baseURL
   var baseURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
-
+  // Store tectonic bounardaries in tectonicPlates
   var tectonicPlates = "static/data/PB2002_boundaries.json";
 
   // Grab the earthquake data with d3 
@@ -130,7 +127,7 @@ function style(feature) {
     // Create a GeoJSON layer containing the features array on the earthquakeData object
     var earthquakes = L.geoJSON(data, {
       pointToLayer: function (feature, latlng) {
-        // Add circlse to map
+        // Add circles to map
         return L.circleMarker(latlng);
       },
       // Call style from function
@@ -141,19 +138,21 @@ function style(feature) {
           "</h3><h3>Depth: " + feature.geometry.coordinates[2] + "</h3><hr><h3>Place: " +
           feature.properties.place + "</h3>")
       }
+    // Add popups to map
     }).addTo(myMap);
   });
 
-  // Grab the earthquake data with d3 
+  // Grab the tectonic boundaries data with d3 
   d3.json(tectonicPlates).then(function (tectonicRes) {
 
-    // Create a GeoJSON layer containing the features array on the earthquakeData object
+    // Create a GeoJSON layer containing the features array on the tectonicRes object
     var tectonic = L.geoJSON(tectonicRes, {
       pointToLayer: function (feature, latlng) {
-        color: "red"
-        // Add circlse to map
+        color: red
+        // Add lines to the map
         return L.polyline(latlng);
       },
+    // Add lines to map
     }).addTo(myMap);
   });
 
