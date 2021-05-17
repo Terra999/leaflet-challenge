@@ -139,20 +139,22 @@ function style(feature) {
           feature.properties.place + "</h3>")
       }
     // Add popups to map
-    }).addTo(myMap);
+    }).addTo(earthquake);
+    earthquake.addTo(myMap);
   });
 
   // Grab the tectonic boundaries data with d3 
   d3.json(tectonicPlates).then(function (tectonicRes) {
 
     // Create a GeoJSON layer containing the features array on the tectonicRes object
-    var tectonic = L.geoJSON(tectonicRes, {
+    var tectonics = L.geoJSON(tectonicRes, {
       pointToLayer: function (feature, latlng) {
         color: red
         // Add lines to the map
         return L.polyline(latlng);
       },
     // Add lines to map
-    }).addTo(myMap);
+    }).addTo(tectonic);
+    tectonic.addTo(myMap);
   });
 
